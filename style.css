@@ -1,0 +1,183 @@
+/* ============================================================
+   ДЛЯ ПОЛЕЧКИ — единая дизайн-система
+   Концепция: «От заката к звёздам»
+   Подключается на каждой странице: <link rel="stylesheet" href="style.css">
+   ============================================================ */
+
+:root{
+  /* — Базы — */
+  --linen:#F7F1E9;          /* светлая база (история, моменты, галерея) */
+  --night:#141019;          /* тёмная база (письмо, секрет) */
+
+  /* — Акценты — */
+  --champagne:#E4C29A;      /* главный тёплый акцент */
+  --terracotta:#C97C5B;     /* глубокий закатный акцент */
+  --rose:#D6A4A0;           /* нежность */
+
+  /* — Текст — */
+  --graphite:#2B2724;       /* текст на светлом */
+  --ink-soft:rgba(43,39,36,.72);
+  --on-dark:rgba(255,255,255,.90);
+  --on-dark-soft:rgba(255,255,255,.66);
+
+  /* — Сигнатура: градиент заката — */
+  --sunset:linear-gradient(120deg,#F6C99A 0%,#E2937B 48%,#9E6B97 100%);
+
+  /* — Форма — */
+  --radius:28px;
+  --radius-lg:36px;
+  --shadow-sm:0 8px 24px rgba(20,16,25,.08);
+  --shadow-md:0 18px 50px rgba(20,16,25,.14);
+  --shadow-lg:0 28px 70px rgba(0,0,0,.35);
+
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --maxw:1100px;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  font-family:'Montserrat',sans-serif;
+  font-weight:300;
+  color:var(--graphite);
+  background:var(--linen);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+::selection{ background:var(--champagne); color:#241a1f; }
+
+img{ display:block; }
+
+/* ---------- Типографика ---------- */
+.eyebrow{
+  font-family:'Montserrat',sans-serif;
+  text-transform:uppercase;
+  letter-spacing:3px;
+  font-size:12px;
+  font-weight:500;
+}
+.script{ font-family:'Caveat',cursive; }
+
+/* ---------- Кнопки (единая система) ---------- */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.6em;
+  font-family:'Montserrat',sans-serif;
+  font-weight:500;
+  font-size:14px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-decoration:none;
+  padding:16px 38px;
+  border-radius:50px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  isolation:isolate;
+  transition:transform .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease);
+}
+.btn::before{                      /* закатная заливка на ховере — нить сигнатуры */
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:var(--sunset);
+  opacity:0;
+  transform:scale(1.12);
+  transition:opacity .45s var(--ease);
+}
+.btn:hover{ transform:translateY(-3px); }
+.btn:hover::before{ opacity:1; }
+
+.btn--ghost{                       /* на фото/тёмном фоне */
+  color:#fff;
+  border:1px solid rgba(255,255,255,.55);
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(8px);
+}
+.btn--ghost:hover{ color:#241a1f; border-color:transparent; }
+
+.btn--solid{                       /* на светлом фоне */
+  color:#fff;
+  background:var(--graphite);
+}
+.btn--solid:hover{ color:#241a1f; }
+
+/* ---------- Карточки (для будущих страниц) ---------- */
+.card{ border-radius:var(--radius); box-shadow:var(--shadow-md); }
+.card--light{
+  background:rgba(255,255,255,.6);
+  border:1px solid rgba(255,255,255,.6);
+  backdrop-filter:blur(12px);
+}
+.card--dark{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* ---------- Разделитель-мотив ---------- */
+.divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  color:var(--terracotta);
+}
+.divider::before,
+.divider::after{
+  content:"";
+  height:1px;
+  width:min(120px,18vw);
+  background:linear-gradient(to right,transparent,currentColor);
+}
+.divider::after{ background:linear-gradient(to left,transparent,currentColor); }
+.divider span{ font-size:14px; }
+
+/* ---------- Появление при скролле ---------- */
+[data-reveal]{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+  will-change:opacity, transform;
+}
+[data-reveal].in{ opacity:1; transform:none; }
+.d1{ transition-delay:.08s; }
+.d2{ transition-delay:.18s; }
+.d3{ transition-delay:.30s; }
+.d4{ transition-delay:.42s; }
+
+/* ---------- Сигнатура: тёплая «волна» перехода между страницами ---------- */
+.page-fade{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  background:var(--sunset);
+  opacity:1;
+  pointer-events:none;
+  transition:opacity .8s var(--ease);
+}
+body.loaded .page-fade{ opacity:0; }
+body.leaving .page-fade{ opacity:1; transition:opacity .45s var(--ease); }
+
+/* ---------- Доступность ---------- */
+a:focus-visible,
+.btn:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--champagne);
+  outline-offset:3px;
+  border-radius:8px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  [data-reveal]{ opacity:1; transform:none; transition:none; }
+  .page-fade{ display:none; }
+  *{ animation:none !important; }
+}

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Наша история</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+
+  <style>
+
+    body{
+      background:var(--linen);
+      color:var(--graphite);
+    }
+
+    .top-section{
+      width:100%;
+      min-height:100vh;
+      padding:120px 20px 80px;
+      position:relative;
+    }
+
+    .background-blur{
+      position:absolute;
+      top:-100px;
+      right:-100px;
+      width:420px;
+      height:420px;
+      background:var(--champagne);
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:0.45;
+      z-index:0;
+    }
+
+    .background-blur.two{
+      top:auto;
+      bottom:-140px;
+      right:auto;
+      left:-120px;
+      background:var(--rose);
+      opacity:0.32;
+    }
+
+    .container{
+      max-width:var(--maxw);
+      margin:0 auto;
+      position:relative;
+      z-index:2;
+    }
+
+    .title{
+      text-align:center;
+      margin-bottom:80px;
+    }
+
+    .title .divider{
+      color:var(--champagne);
+      margin-bottom:26px;
+    }
+
+    .title h1{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(48px, 7vw, 76px);
+      font-weight:600;
+      letter-spacing:.5px;
+      margin-bottom:16px;
+    }
+
+    .title p{
+      font-size:clamp(16px, 2vw, 18px);
+      color:var(--ink-soft);
+      line-height:1.7;
+    }
+
+    .timers{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+      margin-bottom:130px;
+    }
+
+    .timer-card{
+      background:rgba(255,255,255,0.6);
+      border:1px solid rgba(255,255,255,0.6);
+      backdrop-filter:blur(14px);
+      border-radius:var(--radius-lg);
+      padding:46px 38px;
+      box-shadow:var(--shadow-sm);
+      transition:transform .45s var(--ease), box-shadow .45s var(--ease);
+    }
+
+    .timer-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 26px 60px rgba(201,124,91,.18);
+    }
+
+    .timer-card h2{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(34px, 4vw, 40px);
+      margin-bottom:18px;
+      font-weight:500;
+    }
+
+    .timer-card p{
+      font-size:15px;
+      color:var(--ink-soft);
+      margin-bottom:30px;
+      line-height:1.6;
+    }
+
+    .time{
+      font-size:clamp(17px, 2vw, 20px);
+      line-height:1.95;
+      color:var(--graphite);
+      padding-top:24px;
+      border-top:1px solid transparent;       /* закатная нить */
+      border-image:var(--sunset) 1;
+    }
+
+    .story-section{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:64px;
+      align-items:center;
+      margin-bottom:120px;
+    }
+
+    .story-image{
+      position:relative;
+    }
+
+    .story-image img{
+      width:100%;
+      border-radius:var(--radius-lg);
+      object-fit:cover;
+      box-shadow:var(--shadow-md);
+      position:relative;
+      z-index:1;
+    }
+
+    .story-image::after{                       /* смещённая рамка-акцент */
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:var(--radius-lg);
+      border:1px solid rgba(201,124,91,.4);
+      transform:translate(16px,16px);
+      z-index:0;
+    }
+
+    .story-text h2{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(42px, 5vw, 58px);
+      font-weight:500;
+      margin-bottom:24px;
+      line-height:1.08;
+    }
+
+    .story-text p{
+      line-height:1.95;
+      color:var(--ink-soft);
+      font-size:16px;
+      margin-bottom:18px;
+      max-width:46ch;
+    }
+
+    .telegram-box{
+      background:#fff;
+      border-radius:var(--radius);
+      padding:40px;
+      max-width:700px;
+      margin:0 auto 120px;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .telegram-header{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      margin-bottom:32px;
+    }
+
+    .avatar{
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      overflow:hidden;
+      box-shadow:0 0 0 2px #fff, 0 0 0 4px rgba(228,194,154,.65);
+    }
+
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .telegram-name{
+      font-size:18px;
+      font-weight:500;
+    }
+
+    .telegram-box .message{
+      background:#f5f0ea;
+      padding:22px;
+      border-radius:22px 22px 22px 8px;
+      line-height:1.9;
+      color:#444;
+      margin-bottom:12px;
+    }
+
+    .message-time{
+      text-align:right;
+      color:#9d9d9d;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:6px;
+    }
+
+    .message-time .ticks{
+      color:#5aa3d6;
+      font-size:13px;
+      letter-spacing:-2px;
+    }
+
+    .next-page{
+      text-align:center;
+      padding-bottom:60px;
+    }
+
+    @media(max-width:900px){
+      .story-section{ grid-template-columns:1fr; gap:40px; }
+      .story-image::after{ transform:translate(10px,10px); }
+    }
+
+    /* кнопка музыки — без изменений */
+    .music-button{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      width:52px;
+      height:52px;
+      border:none;
+      border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(14px);
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+      z-index:9999;
+      transition:0.4s;
+      border:1px solid rgba(255,255,255,0.12);
+    }
+    .music-button:hover{
+      transform:scale(1.08);
+      background:rgba(255,255,255,0.22);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="page-fade" aria-hidden="true"></div>
+
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-button" onclick="toggleMusic()">
+    ♪
+  </button>
+
+  <section class="top-section">
+
+    <div class="background-blur"></div>
+    <div class="background-blur two"></div>
+
+    <div class="container">
+
+      <div class="title">
+
+        <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+
+        <h1 data-reveal class="d1">Наша история</h1>
+
+        <p data-reveal class="d2">
+          Некоторые люди приходят в жизнь случайно.<br>
+          Но остаются в сердце навсегда.
+        </p>
+      </div>
+
+      <div class="timers">
+
+        <div class="timer-card d1" data-reveal>
+
+          <h2>Мы знакомы</h2>
+
+          <p>
+            С того самого сообщения в Telegram, после которого всё изменилось.
+          </p>
+
+          <div class="time" id="datingTimer"></div>
+
+        </div>
+
+        <div class="timer-card" data-reveal>
+
+          <h2>Мы вместе</h2>
+
+          <p>
+            С момента, когда появился первый поцелуй и началась наша love story.
+          </p>
+
+          <div class="time" id="loveTimer"></div>
+
+        </div>
+
+      </div>
+
+      <div class="story-section">
+
+        <div class="story-image" data-reveal>
+          <img src="story-photo.jpg" alt="">
+        </div>
+
+        <div class="story-text d1" data-reveal>
+
+          <h2>
+            Всё началось<br>
+            случайно
+          </h2>
+
+          <p>
+            Мы познакомились совершенно неожиданно.
+            Одно сообщение в Telegram —
+            и всё понеслось дальше само собой.
+          </p>
+
+          <p>
+            Бесконечные переписки днями и ночами,
+            разговоры ни о чём и обо всём одновременно,
+            смех, поддержка, забота…
+          </p>
+
+          <p>
+            И как-то незаметно
+            ты стала самым важным человеком в моей жизни.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="telegram-box" data-reveal>
+
+        <div class="telegram-header">
+
+          <div class="avatar">
+            <img src="telegram-avatar.jpg" alt="">
+          </div>
+
+          <div class="telegram-name">
+            Полечка ❤️
+          </div>
+
+        </div>
+
+        <div class="message">
+          Привет! Выглядишь очень милой✨<br>
+          Как твоё настроение?
+        </div>
+
+        <div class="message-time">
+          13 января 2025 16:47
+          <span class="ticks" aria-hidden="true">✓✓</span>
+        </div>
+
+      </div>
+
+      <div class="next-page" data-reveal>
+        <a href="moments.html" class="btn btn--solid">
+          Дальше →
+        </a>
+      </div>
+
+    </div>
+
+  </section>
+
+ <script>
+
+function updateLiveTimer(id, startDate){
+
+    function update(){
+
+        const start = new Date(startDate);
+
+        const now = new Date();
+
+        let diff = now - start;
+
+        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+
+        diff -= years * (1000 * 60 * 60 * 24 * 365);
+
+        const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+
+        diff -= months * (1000 * 60 * 60 * 24 * 30);
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        diff -= days * (1000 * 60 * 60 * 24);
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+
+        diff -= hours * (1000 * 60 * 60);
+
+        const minutes = Math.floor(diff / (1000 * 60));
+
+        diff -= minutes * (1000 * 60);
+
+        const seconds = Math.floor(diff / 1000);
+
+      document.getElementById(id).innerHTML = `
+    ${years} г •
+    ${months} мес •
+    ${days} д<br>
+    ${hours} ч •
+    ${minutes} мин •
+    ${seconds} сек
+`;
+
+    }
+
+    update();
+
+    setInterval(update,1000);
+
+}
+
+updateLiveTimer("datingTimer", "2025-01-13T16:47:00");
+
+updateLiveTimer("loveTimer", "2025-02-10T00:00:00");
+
+const music = document.getElementById('bgMusic');
+
+music.volume = 0.45;
+
+const savedTime = localStorage.getItem('musicTime');
+
+if(savedTime){
+
+    music.currentTime = savedTime;
+
+}
+
+const wasPlaying = localStorage.getItem('musicPlaying');
+
+if(wasPlaying === 'true'){
+
+    function resumeMusic(){
+
+        music.play();
+
+        document.removeEventListener('click', resumeMusic);
+        document.removeEventListener('touchstart', resumeMusic);
+
+    }
+
+    document.addEventListener('click', resumeMusic);
+
+    document.addEventListener('touchstart', resumeMusic);
+
+}
+
+function toggleMusic(){
+
+    if(music.paused){
+
+        music.play();
+
+        localStorage.setItem('musicPlaying', 'true');
+
+    } else {
+
+        music.pause();
+
+        localStorage.setItem('musicPlaying', 'false');
+
+    }
+
+}
+
+setInterval(() => {
+
+    localStorage.setItem('musicTime', music.currentTime);
+
+}, 500);
+
+</script>
+
+</body>
+</html>

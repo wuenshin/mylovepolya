@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Наша плёнка</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+
+  <style>
+
+    body{
+      background:var(--linen);
+      color:var(--graphite);
+    }
+
+    .hero{
+      padding:120px 20px 70px;
+      text-align:center;
+      position:relative;
+    }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      top:-120px;
+      left:-120px;
+      width:360px;
+      height:360px;
+      background:var(--champagne);
+      border-radius:50%;
+      filter:blur(120px);
+      opacity:0.45;
+    }
+
+    .hero .divider{
+      color:var(--champagne);
+      margin-bottom:28px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero h1{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(50px, 7vw, 76px);
+      font-weight:600;
+      letter-spacing:.5px;
+      margin-bottom:20px;
+      position:relative;
+      z-index:2;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:0 auto;
+      line-height:1.9;
+      color:var(--ink-soft);
+      font-size:clamp(15px, 2vw, 17px);
+      position:relative;
+      z-index:2;
+    }
+
+    .gallery{
+      max-width:1400px;
+      margin:0 auto 120px;
+      padding:0 25px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:54px 36px;
+    }
+
+    .polaroid{
+      background:#fff;
+      padding:18px 18px 26px;
+      border-radius:8px;
+      box-shadow:0 15px 40px rgba(20,16,25,0.10);
+      transition:transform .45s var(--ease), box-shadow .45s var(--ease);
+      transform:rotate(calc(var(--r) * 1deg));
+    }
+
+    .polaroid:hover{
+      transform:translateY(-10px) scale(1.02) rotate(0deg);
+      box-shadow:0 28px 60px rgba(20,16,25,0.18);
+    }
+
+    .polaroid img{
+      width:100%;
+      height:360px;
+      object-fit:cover;
+      border-radius:4px;
+      margin-bottom:16px;
+    }
+
+    .caption{
+      text-align:center;
+      font-family:'Caveat',cursive;
+      font-size:30px;
+      line-height:1.3;
+      color:#3a3a3a;
+    }
+
+    .quote-section{
+      max-width:900px;
+      margin:0 auto 140px;
+      padding:0 20px;
+      text-align:center;
+    }
+
+    .quote-section .divider{
+      color:var(--champagne);
+      margin-bottom:34px;
+    }
+
+    .quote-section h2{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(40px, 6vw, 62px);
+      line-height:1.3;
+      font-weight:500;
+      margin-bottom:30px;
+    }
+
+    .quote-section p{
+      color:var(--ink-soft);
+      line-height:1.9;
+      font-size:clamp(15px, 2vw, 17px);
+    }
+
+    .next-page{
+      text-align:center;
+      padding-bottom:110px;
+    }
+
+    @media(max-width:768px){
+      .polaroid img{ height:300px; }
+    }
+
+    /* кнопка музыки — без изменений */
+    .music-button{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      width:52px;
+      height:52px;
+      border:none;
+      border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(14px);
+      color:white;
+      font-size:22px;
+      cursor:pointer;
+      z-index:9999;
+      transition:0.4s;
+      border:1px solid rgba(255,255,255,0.12);
+    }
+    .music-button:hover{
+      transform:scale(1.08);
+      background:rgba(255,255,255,0.22);
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="page-fade" aria-hidden="true"></div>
+
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-button" onclick="toggleMusic()">
+    ♪
+  </button>
+
+  <section class="hero">
+
+    <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+
+    <h1 data-reveal class="d1">Наша плёнка</h1>
+
+    <p data-reveal class="d2">
+      Я люблю фотографии,
+      потому что они умеют сохранять чувства.
+      <br><br>
+      И почти каждая фотография с тобой —
+      автоматически становится моей любимой.
+    </p>
+
+  </section>
+
+  <section class="gallery">
+
+    <div data-reveal class="d1">
+      <div class="polaroid" style="--r:-4">
+        <img src="gallery-1.jpg" alt="">
+        <div class="caption">
+          «Ты — моё любимое место»
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="d2">
+      <div class="polaroid" style="--r:3">
+        <img src="gallery-2.jpg" alt="">
+        <div class="caption">
+          «Твои объятия — мой дом»
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="d3">
+      <div class="polaroid" style="--r:-2">
+        <img src="gallery-3.jpg" alt="">
+        <div class="caption">
+          «Каждый закат с тобой становится красивее»
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="d1">
+      <div class="polaroid" style="--r:5">
+        <img src="gallery-4.jpg" alt="">
+        <div class="caption">
+          «Ты смотришь — и внутри всё тает»
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="d2">
+      <div class="polaroid" style="--r:-3">
+        <img src="gallery-5.jpg" alt="">
+        <div class="caption">
+          «Я бы пережил все эти моменты ещё тысячу раз»
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="d3">
+      <div class="polaroid" style="--r:2">
+        <img src="gallery-6.jpg" alt="">
+        <div class="caption">
+          «Люблю тебя в каждом моменте»
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="quote-section">
+
+    <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+
+    <h2 data-reveal class="d1">
+      «Все наши вечера и прогулки —
+      часть истории,
+      которую мы пишем вместе»
+    </h2>
+
+    <p data-reveal class="d2">
+      И я очень надеюсь,
+      что впереди у нас ещё огромное количество моментов,
+      которые однажды тоже станут воспоминаниями ❤️
+    </p>
+
+  </section>
+
+  <div class="next-page" data-reveal>
+
+    <a href="letter.html" class="btn btn--solid">
+      Дальше →
+    </a>
+
+  </div>
+
+  <script>
+
+  const music = document.getElementById('bgMusic');
+
+  music.volume = 0.45;
+
+  const savedTime = localStorage.getItem('musicTime');
+
+  if(savedTime){
+
+    music.currentTime = savedTime;
+
+  }
+
+  const wasPlaying = localStorage.getItem('musicPlaying');
+
+  if(wasPlaying === 'true'){
+
+    function resumeMusic(){
+
+      music.play();
+
+      document.removeEventListener('click', resumeMusic);
+      document.removeEventListener('touchstart', resumeMusic);
+
+    }
+
+    document.addEventListener('click', resumeMusic);
+
+    document.addEventListener('touchstart', resumeMusic);
+
+  }
+
+  function toggleMusic(){
+
+    if(music.paused){
+
+      music.play();
+
+      localStorage.setItem('musicPlaying', 'true');
+
+    } else {
+
+      music.pause();
+
+      localStorage.setItem('musicPlaying', 'false');
+
+    }
+
+  }
+
+  setInterval(() => {
+
+    localStorage.setItem('musicTime', music.currentTime);
+
+  }, 500);
+
+</script>
+</body>
+</html>
