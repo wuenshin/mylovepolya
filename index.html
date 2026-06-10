@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Для Полечки ❤️</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+  /* ============================================================
+     ДЛЯ ПОЛЕЧКИ 2.0 — единый сайт-приложение
+     Один файл. Музыка играет насквозь, переходы — закатной волной.
+     Разделы: home · story · moments · gallery · letter · secret
+     ============================================================ */
+
+  :root{
+    --linen:#F7F1E9;
+    --night:#141019;
+    --champagne:#E4C29A;
+    --terracotta:#C97C5B;
+    --rose:#D6A4A0;
+    --graphite:#2B2724;
+    --ink-soft:rgba(43,39,36,.72);
+    --on-dark:rgba(255,255,255,.90);
+    --on-dark-soft:rgba(255,255,255,.66);
+    --sunset:linear-gradient(120deg,#F6C99A 0%,#E2937B 48%,#9E6B97 100%);
+    --radius:28px;
+    --radius-lg:36px;
+    --shadow-sm:0 8px 24px rgba(20,16,25,.08);
+    --shadow-md:0 18px 50px rgba(20,16,25,.14);
+    --shadow-lg:0 28px 70px rgba(0,0,0,.35);
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --maxw:1100px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Montserrat',sans-serif;
+    font-weight:300;
+    color:var(--graphite);
+    background:var(--night);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  body.theme-light{ background:var(--linen); color:var(--graphite); }
+  body.theme-dark{ background:var(--night); color:#fff; }
+  ::selection{ background:var(--champagne); color:#241a1f; }
+  img{ display:block; }
+
+  /* ---------- Разделы ---------- */
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* ---------- Типографика ---------- */
+  .script{ font-family:'Caveat',cursive; }
+
+  /* ---------- Кнопки ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:.6em;
+    font-family:'Montserrat',sans-serif; font-weight:500; font-size:14px;
+    letter-spacing:1.5px; text-transform:uppercase; text-decoration:none;
+    padding:16px 38px; border-radius:50px; position:relative; overflow:hidden;
+    cursor:pointer; isolation:isolate;
+    transition:transform .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease);
+  }
+  .btn::before{
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:var(--sunset); opacity:0; transform:scale(1.12);
+    transition:opacity .45s var(--ease);
+  }
+  .btn:hover{ transform:translateY(-3px); }
+  .btn:hover::before{ opacity:1; }
+  .btn--ghost{ color:#fff; border:1px solid rgba(255,255,255,.55); background:rgba(255,255,255,.06); backdrop-filter:blur(8px); }
+  .btn--ghost:hover{ color:#241a1f; border-color:transparent; }
+  .btn--solid{ color:#fff; background:var(--graphite); }
+  .btn--solid:hover{ color:#241a1f; }
+
+  /* ---------- Разделитель ---------- */
+  .divider{ display:flex; align-items:center; justify-content:center; gap:14px; color:var(--champagne); }
+  .divider::before,.divider::after{ content:""; height:1px; width:min(120px,18vw); background:linear-gradient(to right,transparent,currentColor); }
+  .divider::after{ background:linear-gradient(to left,transparent,currentColor); }
+  .divider span{ font-size:14px; }
+
+  /* ---------- Появление при скролле ---------- */
+  [data-reveal]{ opacity:0; transform:translateY(20px); transition:opacity .9s var(--ease), transform .9s var(--ease); will-change:opacity,transform; }
+  [data-reveal].in{ opacity:1; transform:none; }
+  .d1{ transition-delay:.08s; } .d2{ transition-delay:.18s; } .d3{ transition-delay:.30s; } .d4{ transition-delay:.42s; }
+
+  /* ---------- Сигнатура: закатная волна переходов ---------- */
+  .page-fade{ position:fixed; inset:0; z-index:9998; background:var(--sunset); opacity:1; pointer-events:none; transition:opacity .8s var(--ease); }
+  body.loaded .page-fade{ opacity:0; }
+  body.leaving .page-fade{ opacity:1; transition:opacity .45s var(--ease); }
+
+  /* ---------- Общие мелочи ---------- */
+  .next-page{ text-align:center; padding-bottom:90px; }
+
+  a:focus-visible,.btn:focus-visible,button:focus-visible{ outline:2px solid var(--champagne); outline-offset:3px; border-radius:8px; }
+
+  /* ---------- Кнопка музыки ---------- */
+  .music-button{
+    position:fixed; right:22px; bottom:22px; width:52px; height:52px;
+    border:none; border-radius:50%; background:rgba(255,255,255,0.16);
+    backdrop-filter:blur(14px); color:#fff; font-size:22px; cursor:pointer;
+    z-index:9999; transition:0.4s; border:1px solid rgba(255,255,255,0.18);
+  }
+  .music-button:hover{ transform:scale(1.08); background:rgba(255,255,255,0.28); }
+
+  /* =================== HOME =================== */
+  #view-home .hero{ width:100%; height:100vh; height:100svh; position:relative; overflow:hidden; }
+  #view-home .hero-media{ position:absolute; top:0; left:0; width:100%; height:118%; z-index:0; }
+  #view-home .hero-media img{ width:100%; height:100%; object-fit:cover; animation:zoom 16s ease-in-out infinite alternate; }
+  @keyframes zoom{ from{ transform:scale(1); } to{ transform:scale(1.08); } }
+  #view-home .hero-veil{ position:absolute; inset:0; z-index:1;
+    background:
+      radial-gradient(120% 85% at 50% 28%, rgba(20,16,25,0) 0%, rgba(20,16,25,.12) 52%, rgba(20,16,25,.62) 100%),
+      linear-gradient(to bottom, rgba(20,16,25,.28) 0%, rgba(20,16,25,.08) 34%, rgba(20,16,25,.58) 100%); }
+  #view-home .hero-content{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2; text-align:center; color:#fff; width:90%; max-width:760px; }
+  #view-home .divider{ margin-bottom:34px; opacity:.9; }
+  #view-home h1{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(54px,8.5vw,94px); line-height:1.03; letter-spacing:.5px; margin-bottom:24px; text-shadow:0 2px 30px rgba(0,0,0,.35); }
+  #view-home .hero-content p{ font-size:clamp(16px,2vw,20px); line-height:1.8; font-weight:300; color:rgba(255,255,255,.86); max-width:600px; margin:0 auto 42px; }
+  #view-home .scroll-cue{ position:absolute; left:50%; bottom:34px; transform:translateX(-50%); z-index:2; display:flex; flex-direction:column; align-items:center; gap:12px; color:rgba(255,255,255,.78); font-size:12px; letter-spacing:3px; text-transform:uppercase; }
+  #view-home .scroll-cue .track{ width:1px; height:40px; position:relative; overflow:hidden; background:linear-gradient(to bottom, rgba(255,255,255,.35), transparent); }
+  #view-home .scroll-cue .track::after{ content:""; position:absolute; left:-1px; top:0; width:3px; height:12px; border-radius:2px; background:var(--champagne); animation:cue 2.6s var(--ease) infinite; }
+  @keyframes cue{ 0%{ transform:translateY(-14px); opacity:0; } 30%{ opacity:1; } 80%{ opacity:.15; } 100%{ transform:translateY(44px); opacity:0; } }
+
+  /* =================== STORY =================== */
+  #view-story{ background:var(--linen); }
+  #view-story .top-section{ width:100%; min-height:100vh; padding:120px 20px 80px; position:relative; }
+  #view-story .background-blur{ position:absolute; top:-100px; right:-100px; width:420px; height:420px; background:var(--champagne); border-radius:50%; filter:blur(120px); opacity:.45; z-index:0; }
+  #view-story .background-blur.two{ top:auto; bottom:-140px; right:auto; left:-120px; background:var(--rose); opacity:.32; }
+  #view-story .container{ max-width:var(--maxw); margin:0 auto; position:relative; z-index:2; }
+  #view-story .title{ text-align:center; margin-bottom:80px; }
+  #view-story .title .divider{ margin-bottom:26px; }
+  #view-story .title h1{ font-family:'Cormorant Garamond',serif; font-size:clamp(48px,7vw,76px); font-weight:600; letter-spacing:.5px; margin-bottom:16px; }
+  #view-story .title p{ font-size:clamp(16px,2vw,18px); color:var(--ink-soft); line-height:1.7; }
+  #view-story .timers{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px; margin-bottom:130px; }
+  #view-story .timer-card{ background:rgba(255,255,255,.6); border:1px solid rgba(255,255,255,.6); backdrop-filter:blur(14px); border-radius:var(--radius-lg); padding:46px 38px; box-shadow:var(--shadow-sm); transition:transform .45s var(--ease), box-shadow .45s var(--ease); }
+  #view-story .timer-card:hover{ transform:translateY(-6px); box-shadow:0 26px 60px rgba(201,124,91,.18); }
+  #view-story .timer-card h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4vw,40px); margin-bottom:18px; font-weight:500; }
+  #view-story .timer-card p{ font-size:15px; color:var(--ink-soft); margin-bottom:30px; line-height:1.6; }
+  #view-story .time{ font-size:clamp(17px,2vw,20px); line-height:1.95; color:var(--graphite); padding-top:24px; border-top:1px solid transparent; border-image:var(--sunset) 1; }
+  #view-story .story-section{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; margin-bottom:120px; }
+  #view-story .story-image{ position:relative; }
+  #view-story .story-image img{ width:100%; border-radius:var(--radius-lg); object-fit:cover; box-shadow:var(--shadow-md); position:relative; z-index:1; }
+  #view-story .story-image::after{ content:""; position:absolute; inset:0; border-radius:var(--radius-lg); border:1px solid rgba(201,124,91,.4); transform:translate(16px,16px); z-index:0; }
+  #view-story .story-text h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(42px,5vw,58px); font-weight:500; margin-bottom:24px; line-height:1.08; }
+  #view-story .story-text p{ line-height:1.95; color:var(--ink-soft); font-size:16px; margin-bottom:18px; max-width:46ch; }
+  #view-story .telegram-box{ background:#fff; border-radius:var(--radius); padding:40px; max-width:700px; margin:0 auto 110px; box-shadow:var(--shadow-sm); }
+  #view-story .telegram-header{ display:flex; align-items:center; gap:15px; margin-bottom:32px; }
+  #view-story .avatar{ width:55px; height:55px; border-radius:50%; overflow:hidden; box-shadow:0 0 0 2px #fff, 0 0 0 4px rgba(228,194,154,.65); }
+  #view-story .avatar img{ width:100%; height:100%; object-fit:cover; }
+  #view-story .telegram-name{ font-size:18px; font-weight:500; }
+  #view-story .telegram-box .message{ background:#f5f0ea; padding:22px; border-radius:22px 22px 22px 8px; line-height:1.9; color:#444; margin-bottom:12px; }
+  #view-story .message-time{ text-align:right; color:#9d9d9d; font-size:13px; display:flex; align-items:center; justify-content:flex-end; gap:6px; }
+  #view-story .message-time .ticks{ color:#5aa3d6; font-size:13px; letter-spacing:-2px; }
+  @media(max-width:900px){
+    #view-story .story-section{ grid-template-columns:1fr; gap:40px; }
+    #view-story .story-image::after{ transform:translate(10px,10px); }
+  }
+
+  /* =================== MOMENTS =================== */
+  #view-moments{ background:var(--linen); }
+  #view-moments .hero{ width:100%; height:75vh; position:relative; overflow:hidden; }
+  #view-moments .hero-media{ position:absolute; top:0; left:0; width:100%; height:116%; z-index:0; }
+  #view-moments .hero-media img{ width:100%; height:100%; object-fit:cover; }
+  #view-moments .hero-veil{ position:absolute; inset:0; z-index:1;
+    background:
+      radial-gradient(120% 90% at 50% 30%, rgba(20,16,25,0) 0%, rgba(20,16,25,.10) 55%, rgba(20,16,25,.55) 100%),
+      linear-gradient(to bottom, rgba(20,16,25,.30), rgba(20,16,25,.12) 40%, rgba(20,16,25,.5)); }
+  #view-moments .hero-content{ position:absolute; z-index:2; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#fff; width:90%; max-width:760px; }
+  #view-moments .hero-content h1{ font-family:'Cormorant Garamond',serif; font-size:clamp(50px,7vw,80px); font-weight:600; letter-spacing:.5px; margin-bottom:18px; text-shadow:0 2px 26px rgba(0,0,0,.3); }
+  #view-moments .hero-content p{ font-size:clamp(16px,2vw,18px); line-height:1.8; font-weight:300; color:rgba(255,255,255,.86); max-width:620px; margin:0 auto; }
+  #view-moments .timeline{ max-width:1100px; margin:120px auto; padding:0 20px; position:relative; }
+  #view-moments .timeline::before{ content:''; position:absolute; left:50%; top:0; width:2px; height:100%; background:rgba(201,124,91,.18); transform:translateX(-50%); }
+  #view-moments .timeline-progress{ position:absolute; left:50%; top:0; width:2px; height:100%; background:var(--sunset); transform:translateX(-50%) scaleY(0); transform-origin:top center; z-index:1; }
+  #view-moments .moment{ width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:140px; position:relative; }
+  #view-moments .moment:nth-child(even){ flex-direction:row-reverse; }
+  #view-moments .text-box{ width:46%; background:rgba(255,255,255,.62); border:1px solid rgba(255,255,255,.6); backdrop-filter:blur(12px); padding:42px; border-radius:var(--radius); box-shadow:var(--shadow-sm); transition:transform .45s var(--ease), box-shadow .45s var(--ease); }
+  #view-moments .text-box:hover{ transform:translateY(-5px); box-shadow:0 24px 56px rgba(201,124,91,.16); }
+  #view-moments .text-box h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(38px,4.5vw,48px); margin-bottom:18px; font-weight:500; }
+  #view-moments .text-box p{ line-height:1.95; color:var(--ink-soft); font-size:15px; margin-bottom:14px; }
+  #view-moments .text-box p:last-child{ margin-bottom:0; }
+  #view-moments .image-box{ width:46%; }
+  #view-moments .image-box img{ width:100%; border-radius:var(--radius); object-fit:cover; box-shadow:var(--shadow-md); }
+  #view-moments .dot{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:20px; height:20px; background:var(--terracotta); border-radius:50%; border:5px solid var(--linen); z-index:5; }
+  #view-moments .dot::after{ content:""; position:absolute; inset:-7px; border-radius:50%; border:2px solid rgba(228,194,154,.65); animation:pulse 2.8s var(--ease) infinite; }
+  @keyframes pulse{ 0%{ transform:scale(.7); opacity:.85; } 70%{ transform:scale(1.7); opacity:0; } 100%{ opacity:0; } }
+  #view-moments .quote-section{ max-width:900px; margin:0 auto 130px; text-align:center; padding:0 20px; }
+  #view-moments .quote-section .divider{ margin-bottom:34px; }
+  #view-moments .quote-section h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(40px,6vw,64px); font-weight:500; margin-bottom:30px; line-height:1.22; }
+  #view-moments .quote-section p{ font-size:clamp(16px,2vw,18px); line-height:1.9; color:var(--ink-soft); }
+  @media(max-width:900px){
+    #view-moments .timeline::before, #view-moments .timeline-progress{ display:none; }
+    #view-moments .moment, #view-moments .moment:nth-child(even){ flex-direction:column; gap:28px; }
+    #view-moments .text-box, #view-moments .image-box{ width:100%; }
+    #view-moments .dot{ display:none; }
+  }
+
+  /* =================== GALLERY =================== */
+  #view-gallery{ background:var(--linen); }
+  #view-gallery .hero{ padding:120px 20px 70px; text-align:center; position:relative; }
+  #view-gallery .hero::before{ content:''; position:absolute; top:-120px; left:-120px; width:360px; height:360px; background:var(--champagne); border-radius:50%; filter:blur(120px); opacity:.45; }
+  #view-gallery .hero .divider{ margin-bottom:28px; position:relative; z-index:2; }
+  #view-gallery .hero h1{ font-family:'Cormorant Garamond',serif; font-size:clamp(50px,7vw,76px); font-weight:600; letter-spacing:.5px; margin-bottom:20px; position:relative; z-index:2; }
+  #view-gallery .hero p{ max-width:760px; margin:0 auto; line-height:1.9; color:var(--ink-soft); font-size:clamp(15px,2vw,17px); position:relative; z-index:2; }
+  #view-gallery .gallery{ max-width:1400px; margin:0 auto 120px; padding:0 25px; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:54px 36px; }
+  #view-gallery .polaroid{ background:#fff; padding:18px 18px 26px; border-radius:8px; box-shadow:0 15px 40px rgba(20,16,25,.10); transition:transform .45s var(--ease), box-shadow .45s var(--ease); transform:rotate(calc(var(--r) * 1deg)); }
+  #view-gallery .polaroid:hover{ transform:translateY(-10px) scale(1.02) rotate(0deg); box-shadow:0 28px 60px rgba(20,16,25,.18); }
+  #view-gallery .polaroid img{ width:100%; height:360px; object-fit:cover; border-radius:4px; margin-bottom:16px; }
+  #view-gallery .caption{ text-align:center; font-family:'Caveat',cursive; font-size:30px; line-height:1.3; color:#3a3a3a; }
+  #view-gallery .quote-section{ max-width:900px; margin:0 auto 130px; padding:0 20px; text-align:center; }
+  #view-gallery .quote-section .divider{ margin-bottom:34px; }
+  #view-gallery .quote-section h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(40px,6vw,62px); line-height:1.3; font-weight:500; margin-bottom:30px; }
+  #view-gallery .quote-section p{ color:var(--ink-soft); line-height:1.9; font-size:clamp(15px,2vw,17px); }
+  @media(max-width:768px){ #view-gallery .polaroid img{ height:300px; } }
+
+  /* =================== LETTER =================== */
+  #view-letter{ color:#fff; }
+  #view-letter .background{ position:fixed; inset:0; z-index:-2; }
+  #view-letter .background img{ width:100%; height:100%; object-fit:cover; filter:brightness(.35); }
+  #view-letter .overlay{ position:fixed; inset:0; background:linear-gradient(to bottom, rgba(20,16,25,.25), rgba(20,16,25,.94)); z-index:-1; }
+  #view-letter .container{ max-width:900px; margin:0 auto; padding:140px 25px 110px; text-align:center; position:relative; z-index:1; }
+  #view-letter .top-text{ margin-bottom:90px; }
+  #view-letter .top-text .divider{ margin-bottom:30px; }
+  #view-letter .top-text h1{ font-family:'Cormorant Garamond',serif; font-size:clamp(54px,9vw,86px); font-weight:500; margin-bottom:24px; line-height:1.05; }
+  #view-letter .top-text p{ font-size:clamp(16px,2vw,18px); line-height:2; color:var(--on-dark-soft); }
+  #view-letter .letter{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(16px); border-radius:var(--radius-lg); padding:70px 40px; box-shadow:var(--shadow-lg); margin-bottom:80px; }
+  #view-letter .letter p{ font-size:clamp(16px,2vw,18px); line-height:2.1; color:var(--on-dark); margin-bottom:26px; }
+  #view-letter .final-line{ margin-top:48px; font-family:'Caveat',cursive; font-size:clamp(40px,7vw,56px); line-height:1.3; color:var(--champagne); }
+  #view-letter .question{ margin-top:80px; text-align:center; }
+  #view-letter .secret-button{ text-decoration:none; color:var(--champagne); font-size:clamp(24px,4vw,30px); font-family:'Cormorant Garamond',serif; transition:.4s; position:relative; overflow:hidden; display:inline-block; padding:18px 34px; border-radius:40px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(10px); animation:softGlow 3s ease-in-out infinite; }
+  #view-letter .secret-button::after{ content:''; position:absolute; left:50%; bottom:10px; width:0%; height:1px; background:var(--champagne); transform:translateX(-50%); transition:.4s; }
+  #view-letter .secret-button:hover::after{ width:70%; }
+  @keyframes softGlow{ 0%{ box-shadow:0 0 0 rgba(255,255,255,0), 0 0 18px rgba(255,220,180,.18); } 50%{ box-shadow:0 0 12px rgba(255,220,180,.22), 0 0 28px rgba(255,220,180,.28); } 100%{ box-shadow:0 0 0 rgba(255,255,255,0), 0 0 18px rgba(255,220,180,.18); } }
+  @media(max-width:768px){ #view-letter .letter{ padding:45px 28px; } }
+
+  /* =================== SECRET =================== */
+  #view-secret{ color:#fff; }
+  #view-secret .background{ position:fixed; inset:0; z-index:-3; }
+  #view-secret .background img{ width:100%; height:100%; object-fit:cover; filter:brightness(.25); }
+  #view-secret .overlay{ position:fixed; inset:0; background:linear-gradient(to bottom, rgba(20,16,25,.48), rgba(20,16,25,.95)); z-index:-2; }
+  #view-secret .hearts{ position:fixed; inset:0; overflow:hidden; z-index:-1; pointer-events:none; }
+  #view-secret .heart{ position:absolute; color:var(--rose); animation:floatUp linear infinite; user-select:none; }
+  @keyframes floatUp{ from{ transform:translateY(112vh) scale(.9); opacity:0; } 18%{ opacity:1; } to{ transform:translateY(-120vh) scale(1.05); opacity:0; } }
+  #view-secret .container{ max-width:900px; margin:0 auto; padding:120px 25px 120px; text-align:center; position:relative; z-index:1; }
+  #view-secret .top{ margin-bottom:90px; }
+  #view-secret .top .divider{ margin-bottom:30px; }
+  #view-secret .top h1{ font-family:'Cormorant Garamond',serif; font-size:clamp(56px,9vw,92px); line-height:1.05; font-weight:500; margin-bottom:24px; }
+  #view-secret .top p{ color:var(--on-dark-soft); line-height:2; font-size:clamp(16px,2vw,18px); }
+  #view-secret .main-photo{ width:100%; margin-bottom:90px; }
+  #view-secret .main-photo img{ width:100%; border-radius:var(--radius-lg); object-fit:cover; box-shadow:var(--shadow-lg); }
+  #view-secret .message{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); backdrop-filter:blur(16px); border-radius:var(--radius-lg); padding:70px 40px; margin-bottom:80px; box-shadow:var(--shadow-lg); }
+  #view-secret .message p{ font-size:clamp(16px,2vw,18px); line-height:2.1; color:var(--on-dark); margin-bottom:28px; }
+  #view-secret .final{ margin-top:50px; font-family:'Caveat',cursive; font-size:clamp(42px,7vw,58px); line-height:1.3; color:var(--champagne); }
+  #view-secret .ending{ margin-top:90px; text-align:center; }
+  #view-secret .ending .divider{ margin-bottom:30px; }
+  #view-secret .ending h2{ font-family:'Cormorant Garamond',serif; font-size:clamp(40px,6vw,52px); font-weight:500; margin-bottom:24px; }
+  #view-secret .ending p{ color:var(--on-dark-soft); line-height:2; font-size:clamp(15px,2vw,16px); }
+  #view-secret .restart{ margin-top:54px; }
+  @media(max-width:768px){ #view-secret .message{ padding:45px 28px; } }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    [data-reveal]{ opacity:1; transform:none; transition:none; }
+    .page-fade{ display:none; }
+    *{ animation:none !important; }
+  }
+  </style>
+</head>
+
+<body class="theme-dark">
+
+  <div class="page-fade" aria-hidden="true"></div>
+
+  <!-- ОДИН плеер на весь сайт — больше не пересоздаётся, музыка играет насквозь -->
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-button" onclick="toggleMusic()" aria-label="Музыка">♪</button>
+
+  <!-- ============ ГЛАВНАЯ ============ -->
+  <div id="view-home" class="view active">
+    <section class="hero">
+      <div class="hero-media" data-parallax="-0.12">
+        <img src="hero-main.jpg" alt="">
+      </div>
+      <div class="hero-veil"></div>
+      <div class="hero-content">
+        <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+        <h1 data-reveal class="d1">Для Полечки ❤️</h1>
+        <p data-reveal class="d2">
+          Наша история началась случайно.
+          Но стала самым важным событием в моей жизни.
+        </p>
+        <a href="#" data-nav="story" class="btn btn--ghost" data-reveal>Начать путешествие</a>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">
+        <span>love story</span>
+        <span class="track"></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ ИСТОРИЯ ============ -->
+  <div id="view-story" class="view">
+    <section class="top-section">
+      <div class="background-blur"></div>
+      <div class="background-blur two"></div>
+      <div class="container">
+        <div class="title">
+          <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+          <h1 data-reveal class="d1">Наша история</h1>
+          <p data-reveal class="d2">
+            Некоторые люди приходят в жизнь случайно.<br>
+            Но остаются в сердце навсегда.
+          </p>
+        </div>
+
+        <div class="timers">
+          <div class="timer-card d1" data-reveal>
+            <h2>Мы знакомы</h2>
+            <p>С того самого сообщения в Telegram, после которого всё изменилось.</p>
+            <div class="time" id="datingTimer"></div>
+          </div>
+          <div class="timer-card" data-reveal>
+            <h2>Мы вместе</h2>
+            <p>С момента, когда появился первый поцелуй и началась наша love story.</p>
+            <div class="time" id="loveTimer"></div>
+          </div>
+        </div>
+
+        <div class="story-section">
+          <div class="story-image" data-reveal>
+            <img src="story-photo.jpg" alt="">
+          </div>
+          <div class="story-text d1" data-reveal>
+            <h2>Всё началось<br>случайно</h2>
+            <p>
+              Мы познакомились совершенно неожиданно.
+              Одно сообщение в Telegram —
+              и всё понеслось дальше само собой.
+            </p>
+            <p>
+              Бесконечные переписки днями и ночами,
+              разговоры ни о чём и обо всём одновременно,
+              смех, поддержка, забота…
+            </p>
+            <p>
+              И как-то незаметно
+              ты стала самым важным человеком в моей жизни.
+            </p>
+          </div>
+        </div>
+
+        <div class="telegram-box" data-reveal>
+          <div class="telegram-header">
+            <div class="avatar"><img src="telegram-avatar.jpg" alt=""></div>
+            <div class="telegram-name">Полечка ❤️</div>
+          </div>
+          <div class="message">
+            Привет! Выглядишь очень милой✨<br>
+            Как твоё настроение?
+          </div>
+          <div class="message-time">
+            13 января 2025 16:47
+            <span class="ticks" aria-hidden="true">✓✓</span>
+          </div>
+        </div>
+
+        <div class="next-page" data-reveal>
+          <a href="#" data-nav="moments" class="btn btn--solid">Дальше →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ МОМЕНТЫ ============ -->
+  <div id="view-moments" class="view">
+    <section class="hero">
+      <div class="hero-media" data-parallax="-0.1">
+        <img src="moments-hero.jpg" alt="">
+      </div>
+      <div class="hero-veil"></div>
+      <div class="hero-content">
+        <h1 data-reveal>Моменты</h1>
+        <p data-reveal class="d1">
+          Все эти вечера, прогулки, закаты и объятия —
+          часть нашей истории, которую мы пишем вместе.
+        </p>
+      </div>
+    </section>
+
+    <section class="timeline">
+      <div class="timeline-progress" aria-hidden="true"></div>
+
+      <div class="moment" data-reveal>
+        <div class="text-box">
+          <h2>Летние закаты</h2>
+          <p>
+            Я всегда буду помнить наши летние вечера у моря.
+            Как мы лежали рядом,
+            смотрели на закат
+            и будто забывали обо всём вокруг.
+          </p>
+        </div>
+        <div class="image-box"><img src="sunset-memory.jpg" alt=""></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="moment" data-reveal>
+        <div class="text-box">
+          <h2>Каток 😅</h2>
+          <p>Полина очень уговаривала меня сходить на каток и говорила, что отлично катается.</p>
+          <p>А я честно сказал, что стоял на коньках всего раз 5 в жизни.</p>
+          <p>Но именно такие моменты почему-то становятся самыми тёплыми воспоминаниями.</p>
+        </div>
+        <div class="image-box"><img src="ice-skating.jpg" alt=""></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="moment" data-reveal>
+        <div class="text-box">
+          <h2>Камень у моря</h2>
+          <p>
+            Как-то раз мы были на море,
+            и я вместо того,
+            чтобы красиво вынырнуть возле Поли —
+            ударился головой об камень 😭
+          </p>
+          <p>Потом ходил с шишкой ещё недели три. Но сейчас это один из самых любимых и смешных моментов.</p>
+        </div>
+        <div class="image-box"><img src="sea-memory.jpg" alt=""></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="moment" data-reveal>
+        <div class="text-box">
+          <h2>Ромашки</h2>
+          <p>1 июня 2025 мы поехали к водопаду Козырёк.</p>
+          <p>А под конец прогулки я нарвал тебе букет полевых ромашек.</p>
+          <p>Иногда самые простые моменты становятся самыми важными.</p>
+        </div>
+        <div class="image-box"><img src="flowers-memory.jpg" alt=""></div>
+        <div class="dot"></div>
+      </div>
+    </section>
+
+    <section class="quote-section">
+      <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+      <h2 data-reveal class="d1">«Каждый момент с тобой — уже любимое воспоминание»</h2>
+      <p data-reveal class="d2">
+        Даже если это просто прогулка вечером,
+        закат у моря
+        или твои тёплые объятия со спины.
+      </p>
+    </section>
+
+    <div class="next-page" data-reveal>
+      <a href="#" data-nav="gallery" class="btn btn--solid">Дальше →</a>
+    </div>
+  </div>
+
+  <!-- ============ ГАЛЕРЕЯ ============ -->
+  <div id="view-gallery" class="view">
+    <section class="hero">
+      <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+      <h1 data-reveal class="d1">Наша плёнка</h1>
+      <p data-reveal class="d2">
+        Я люблю фотографии,
+        потому что они умеют сохранять чувства.
+        <br><br>
+        И почти каждая фотография с тобой —
+        автоматически становится моей любимой.
+      </p>
+    </section>
+
+    <section class="gallery">
+      <div data-reveal class="d1"><div class="polaroid" style="--r:-4"><img src="gallery-1.jpg" alt=""><div class="caption">«Ты — моё любимое место»</div></div></div>
+      <div data-reveal class="d2"><div class="polaroid" style="--r:3"><img src="gallery-2.jpg" alt=""><div class="caption">«Твои объятия — мой дом»</div></div></div>
+      <div data-reveal class="d3"><div class="polaroid" style="--r:-2"><img src="gallery-3.jpg" alt=""><div class="caption">«Каждый закат с тобой становится красивее»</div></div></div>
+      <div data-reveal class="d1"><div class="polaroid" style="--r:5"><img src="gallery-4.jpg" alt=""><div class="caption">«Ты смотришь — и внутри всё тает»</div></div></div>
+      <div data-reveal class="d2"><div class="polaroid" style="--r:-3"><img src="gallery-5.jpg" alt=""><div class="caption">«Я бы пережил все эти моменты ещё тысячу раз»</div></div></div>
+      <div data-reveal class="d3"><div class="polaroid" style="--r:2"><img src="gallery-6.jpg" alt=""><div class="caption">«Люблю тебя в каждом моменте»</div></div></div>
+    </section>
+
+    <section class="quote-section">
+      <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+      <h2 data-reveal class="d1">«Все наши вечера и прогулки — часть истории, которую мы пишем вместе»</h2>
+      <p data-reveal class="d2">
+        И я очень надеюсь,
+        что впереди у нас ещё огромное количество моментов,
+        которые однажды тоже станут воспоминаниями ❤️
+      </p>
+    </section>
+
+    <div class="next-page" data-reveal>
+      <a href="#" data-nav="letter" class="btn btn--solid">Дальше →</a>
+    </div>
+  </div>
+
+  <!-- ============ ПИСЬМО ============ -->
+  <div id="view-letter" class="view">
+    <div class="background"><img src="letter-background.jpg" alt=""></div>
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="top-text">
+        <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+        <h1 data-reveal class="d1">Для тебя,<br>Полечка ❤️</h1>
+        <p data-reveal class="d2">
+          Если честно,
+          я даже не знаю,
+          как правильно описать всё,
+          что чувствую к тебе.
+        </p>
+      </div>
+
+      <div class="letter" data-reveal>
+        <p>Спасибо тебе за всё, что ты делаешь для меня.</p>
+        <p>
+          За твою заботу,
+          поддержку,
+          тепло,
+          смех,
+          объятия
+          и моменты,
+          которые навсегда останутся в моей памяти.
+        </p>
+        <p>
+          Спасибо за наши прогулки,
+          закаты,
+          разговоры ночами,
+          за море,
+          ромашки,
+          каток,
+          котиков на улице
+          и вообще за всё,
+          что связано с тобой.
+        </p>
+        <p>Рядом с тобой я чувствую себя по-настоящему счастливым.</p>
+        <p>И знаешь… мне кажется, что любовь — это не про громкие слова.</p>
+        <p>Она про моменты, когда ты обнимаешь меня сзади, и весь мир вдруг становится спокойнее.</p>
+        <p>Про ощущение, что рядом — именно тот человек, с которым хочется проживать жизнь.</p>
+        <p>Поль, я тебя очень сильно люблю.</p>
+        <p>
+          Будь всегда такой,
+          какая ты есть.
+          Слушай своё сердце —
+          оно у тебя очень доброе ❤️
+        </p>
+        <div class="final-line">С твоими 20,<br>моя любимка ✨</div>
+      </div>
+
+      <div class="question" data-reveal>
+        <a href="#" data-nav="secret" class="secret-button">"ты меня правда любишь?"</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ СЕКРЕТ ============ -->
+  <div id="view-secret" class="view">
+    <div class="background"><img src="secret-background.jpg" alt=""></div>
+    <div class="overlay"></div>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+      <div class="top">
+        <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+        <h1 data-reveal class="d1">конечно да,<br>моя любимка ❤️</h1>
+        <p data-reveal class="d2">
+          И мне кажется,
+          что я буду любить тебя
+          ещё очень-очень долго.
+        </p>
+      </div>
+
+      <div class="main-photo" data-reveal><img src="secret-photo.jpg" alt=""></div>
+
+      <div class="message" data-reveal>
+        <p>Спасибо тебе за то, что появилась в моей жизни.</p>
+        <p>
+          Ты стала человеком,
+          рядом с которым хочется жить,
+          мечтать,
+          смеяться,
+          путешествовать,
+          просыпаться
+          и просто быть счастливым.
+        </p>
+        <p>
+          Мне очень нравится,
+          что мы умеем разговаривать друг с другом,
+          поддерживать,
+          слышать
+          и всегда искать путь друг к другу.
+        </p>
+        <p>И знаешь… мне правда кажется, что у нас впереди ещё очень много красивых моментов.</p>
+        <p>
+          Новые прогулки,
+          новые закаты,
+          новые фотографии,
+          новые воспоминания
+          и целая история,
+          которую мы будем писать вместе дальше.
+        </p>
+        <p>
+          Я очень хочу,
+          чтобы ты всегда чувствовала себя любимой,
+          важной,
+          красивой
+          и самой счастливой девочкой ❤️
+        </p>
+        <div class="final">Спасибо тебе за всё,<br>Полечка ✨</div>
+      </div>
+
+      <div class="ending">
+        <div class="divider" data-reveal aria-hidden="true"><span>❤</span></div>
+        <h2 data-reveal class="d1">The End?</h2>
+        <p data-reveal class="d2">Нет.<br>Это только начало нашей истории.</p>
+        <div class="restart" data-reveal>
+          <a href="#" data-nav="home" class="btn btn--ghost">Начать сначала</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  /* ================= МУЗЫКА (один плеер, играет насквозь) ================= */
+  function toggleMusic(){
+    const a = document.getElementById('bgMusic');
+    if(a.paused){ a.play(); localStorage.setItem('musicPlaying','true'); }
+    else { a.pause(); localStorage.setItem('musicPlaying','false'); }
+  }
+
+  (function(){
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const body = document.body;
+    const views = [...document.querySelectorAll('.view')];
+    const DARK = new Set(['home','letter','secret']);
+    let current = 'home';
+
+    /* ---- проявление страницы ---- */
+    requestAnimationFrame(() => body.classList.add('loaded'));
+
+    /* ---- наблюдатель появления ---- */
+    let io = null;
+    if(!reduce && 'IntersectionObserver' in window){
+      io = new IntersectionObserver((entries) => {
+        entries.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { threshold:0.15, rootMargin:'0px 0px -8% 0px' });
+    }
+    function revealView(view){
+      const els = view.querySelectorAll('[data-reveal]');
+      if(reduce || !io){ els.forEach(el => el.classList.add('in')); return; }
+      els.forEach(el => { el.classList.remove('in'); io.observe(el); });
+    }
+
+    /* ---- сердечки (только на секрете) ---- */
+    let heartTimer = null;
+    function createHeart(){
+      const hearts = document.getElementById('hearts');
+      if(!hearts) return;
+      const h = document.createElement('div');
+      h.className = 'heart';
+      h.innerHTML = '❤';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (14 + Math.random() * 26) + 'px';
+      h.style.opacity = (0.08 + Math.random() * 0.16).toFixed(2);
+      h.style.filter = 'blur(' + (Math.random() * 1.6).toFixed(1) + 'px)';
+      const dur = 11 + Math.random() * 9;
+      h.style.animationDuration = dur + 's';
+      hearts.appendChild(h);
+      setTimeout(() => h.remove(), dur * 1000 + 500);
+    }
+    function startHearts(){ if(reduce || heartTimer) return; heartTimer = setInterval(createHeart, 700); }
+    function stopHearts(){ if(heartTimer){ clearInterval(heartTimer); heartTimer = null; } const h = document.getElementById('hearts'); if(h) h.innerHTML = ''; }
+
+    /* ---- показ раздела ---- */
+    function showView(id){
+      views.forEach(v => v.classList.toggle('active', v.id === 'view-' + id));
+      const target = document.getElementById('view-' + id);
+      body.classList.toggle('theme-dark', DARK.has(id));
+      body.classList.toggle('theme-light', !DARK.has(id));
+      window.scrollTo(0, 0);
+      revealView(target);
+      if(id === 'secret') startHearts(); else stopHearts();
+      if(id === 'moments' && reduce){ const f = target.querySelector('.timeline-progress'); if(f) f.style.transform = 'translateX(-50%) scaleY(1)'; }
+      current = id;
+      onScroll();
+    }
+
+    /* ---- переход (закатная волна) ---- */
+    function navigate(id){
+      if(id === current) return;
+      if(reduce){ showView(id); return; }
+      body.classList.add('leaving');
+      setTimeout(() => { showView(id); body.classList.remove('leaving'); }, 450);
+    }
+
+    document.querySelectorAll('[data-nav]').forEach(a => {
+      a.addEventListener('click', (e) => { e.preventDefault(); navigate(a.getAttribute('data-nav')); });
+    });
+
+    /* ---- скролл: параллакс + линия таймлайна (для активного раздела) ---- */
+    let ticking = false;
+    function onScroll(){
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if(!reduce){
+          const y = window.scrollY;
+          document.querySelectorAll('.view.active [data-parallax]').forEach(l => {
+            const s = parseFloat(l.dataset.parallax) || -0.1;
+            l.style.transform = 'translate3d(0,' + (y * s) + 'px,0)';
+          });
+          const moments = document.getElementById('view-moments');
+          if(moments.classList.contains('active')){
+            const tlEl = moments.querySelector('.timeline');
+            const fill = moments.querySelector('.timeline-progress');
+            if(tlEl && fill){
+              const rect = tlEl.getBoundingClientRect();
+              const tlTop = rect.top + window.scrollY;
+              const center = window.scrollY + window.innerHeight * 0.5;
+              let p = (center - tlTop) / rect.height;
+              p = Math.max(0, Math.min(1, p));
+              fill.style.transform = 'translateX(-50%) scaleY(' + p + ')';
+            }
+          }
+        }
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+
+    /* ---- живые таймеры (идут всегда) ---- */
+    function updateLiveTimer(id, startDate){
+      function update(){
+        const start = new Date(startDate);
+        const now = new Date();
+        let diff = now - start;
+        const years = Math.floor(diff / (1000*60*60*24*365)); diff -= years*(1000*60*60*24*365);
+        const months = Math.floor(diff / (1000*60*60*24*30)); diff -= months*(1000*60*60*24*30);
+        const days = Math.floor(diff / (1000*60*60*24)); diff -= days*(1000*60*60*24);
+        const hours = Math.floor(diff / (1000*60*60)); diff -= hours*(1000*60*60);
+        const minutes = Math.floor(diff / (1000*60)); diff -= minutes*(1000*60);
+        const seconds = Math.floor(diff / 1000);
+        const el = document.getElementById(id);
+        if(el) el.innerHTML = years + ' г • ' + months + ' мес • ' + days + ' д<br>' + hours + ' ч • ' + minutes + ' мин • ' + seconds + ' сек';
+      }
+      update();
+      setInterval(update, 1000);
+    }
+    updateLiveTimer('datingTimer', '2025-01-13T16:47:00');
+    updateLiveTimer('loveTimer', '2025-02-10T00:00:00');
+
+    /* ---- музыка: один поток на весь сайт ---- */
+    const audio = document.getElementById('bgMusic');
+    audio.volume = 0.45;
+    const savedTime = localStorage.getItem('musicTime');
+    if(savedTime){ try { audio.currentTime = parseFloat(savedTime) || 0; } catch(e){} }
+
+    if(localStorage.getItem('musicPlaying') !== 'false'){
+      audio.play().then(() => localStorage.setItem('musicPlaying','true')).catch(() => {
+        const start = () => {
+          audio.play().then(() => localStorage.setItem('musicPlaying','true')).catch(() => {});
+          document.removeEventListener('click', start);
+          document.removeEventListener('touchstart', start);
+        };
+        document.addEventListener('click', start);
+        document.addEventListener('touchstart', start);
+      });
+    }
+    setInterval(() => localStorage.setItem('musicTime', audio.currentTime), 500);
+
+    /* ---- старт ---- */
+    revealView(document.getElementById('view-home'));
+    onScroll();
+  })();
+  </script>
+
+</body>
+</html>
